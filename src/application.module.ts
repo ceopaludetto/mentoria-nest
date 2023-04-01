@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AuthenticationModule } from "./modules";
+import { AuthenticationModule, PrismaModule } from "./modules";
 import { ConfigModule } from "@nestjs/config";
 
 @Module({
@@ -7,6 +7,7 @@ import { ConfigModule } from "@nestjs/config";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    PrismaModule,
     AuthenticationModule,
   ],
 })

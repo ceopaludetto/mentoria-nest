@@ -1,17 +1,27 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AuthenticationService } from "./authentication.service";
-import { AuthenticationInput } from "./dtos";
+import { AuthenticationSignInInput, AuthenticationSignUpInput } from "./dtos";
+import { AuthenticationGuard } from "./authentication.guard";
+import { CurrentUser } from "./authentication.decorator";
+import { User } from "@prisma/client";
 
 @Controller("/auth")
 export class AuthenticationController {
   public constructor(private readonly authenticationService: AuthenticationService) {}
 
-  @Post("/login")
-  public async login(@Body() body: AuthenticationInput) {
-    console.log(body);
-    return {};
+  @Post("/signin")
+  public async signIn(@Body() body: AuthenticationSignInInput) {
+    return this.authenticationService.signIn(body);
   }
 
-  @Post("/register")
-  public async register() {}
+  @Post("/signup")
+  public async signUp(@Body() body: AuthenticationSignUpInput) {
+    return this.authenticationService.signUp(body);
+  }
+
+  @Get("/profile")
+  @UseGuards(AuthenticationGuard)
+  public async profile(@CurrentUser() user: User) {
+    return user;
+  }
 }
